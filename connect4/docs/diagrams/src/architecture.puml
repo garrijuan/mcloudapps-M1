@@ -1,0 +1,26 @@
+@startuml Architecture
+title Arquitectura Connect4
+package connect4 #D0D0D0 {
+package controllers #D0D0D0 {}
+package types #D0D0D0 {}
+package views #D0D0D0 {}
+package models #D0D0D0 {}
+}
+package utils #D0D0D0 {
+package util.models #D0D0D0 {}
+package util.views #D0D0D0 {}
+}
+package java.util {}
+package java.io {}
+views .right.> types
+views .down.> util.views
+views .down.> util.models
+models .down.> types
+models .right.> java.util
+models .left.> util.models
+controllers .right.> views
+controllers .right.> models
+controllers .right.> types
+controllers .down.> java.util
+util.views .right.> java.io
+@enduml

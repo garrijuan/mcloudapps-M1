@@ -1,0 +1,140 @@
+@startuml redo
+allow_mixing
+actor :Player: as Playerr
+package controllers{
+object  RedoController{
+}
+}
+
+package models  {
+object Board{
+}
+object Game{
+}
+object Turn{
+}
+object Player{
+}
+object Session{
+}
+Object Memento{
+}
+object Result{
+}
+object Registry{
+}
+}
+
+package types  {
+object Color{
+}
+}
+
+package utils  {
+object Coordinate{
+}
+object Direction{
+}
+}
+
+package views {
+object BoardView{
+}
+object PlayView{
+}
+object PlayMenu{
+}
+object Message{
+}
+object MessageView{
+}
+}
+
+Playerr --> PlayView
+note on link
+    redo()
+end note
+PlayView ..> Message
+note on link
+    write()
+end note
+PlayView ..> BoardView
+note on link
+    write(redoController)
+end note
+
+BoardView ..> MessageView
+note on link
+    writeColor(color)
+end note
+PlayMenu ..> RedoController
+note on link
+    undoable()
+    redoable()
+    redo()
+end note
+BoardView ..> Message
+note on link
+    write()
+    writeln()
+end note
+BoardView ..> Coordinate
+PlayView --> RedoController
+note on link
+    next()
+    isGameOver()
+end note
+PlayView ..> PlayMenu
+note on link
+    interact(redoController)
+end note
+BoardView ..> RedoController
+note on link
+    getColor(coordinate)
+end note
+RedoController --> Session
+note on link
+    redoable()
+    undoable()
+    redo()
+end note
+RedoController ..> Coordinate
+Session  *-down-> Registry
+Registry  *-down-> Game
+Game  *-down-> Memento
+note on link
+    setMemento()
+end note
+Memento *-down-> Turn
+note on link
+    new()
+end note
+Memento *-down-> Result
+note on link
+    new()
+end note
+Game ..> Result
+note on link
+    getColor(coordinate)
+    isGameOver()
+    undoable()
+    redoable()
+    redo()
+end note
+Board *-down-> Result
+Board ..> Coordinate
+Result ..> Direction
+Result ..> Coordinate
+Board *-down-> Player
+Board *-down-> Color
+Turn ..> Board
+Turn *-down-> Player
+note on link
+    getColor()
+end note
+Result ..> Color
+
+Player ..> Coordinate
+Player --> Color
+Game ..> Coordinate
+@enduml

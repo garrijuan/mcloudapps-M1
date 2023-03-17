@@ -1,0 +1,200 @@
+@startuml play
+allow_mixing
+
+actor :Player: as Playerr
+
+package controllers  {
+
+    object PlayController{
+
+    }
+}
+
+
+package models  {
+    object Board{
+
+    }
+
+    object Game{
+
+    }
+
+    object Turn{
+
+    }
+    
+    object Player{
+
+    }
+    
+    object Result{
+
+    }
+    
+    object Memento{
+    }
+    
+    object Session {
+    }
+    
+    object Registry {
+    }
+}
+
+package utils  {
+
+    object Coordinate{
+
+    }
+
+}
+
+package types  {
+
+    object Color{
+
+    }
+
+    object Error{
+
+    }
+}
+
+package views {
+
+    object BoardView{
+
+    }
+
+    object PlayView{
+
+    }
+
+    object MessageView{
+
+    }
+
+    object ErrorView{
+
+    }
+
+    object PlayerView{
+
+    }
+
+    object Message{
+
+    }
+    
+    object ResultView{
+
+    }
+    
+}
+
+Playerr --> PlayView
+note on link
+    play()
+end note
+PlayView ..> PlayerView
+note on link
+    interact(playController)
+end note
+PlayView ..> BoardView
+note on link
+    write(playController)
+end note
+PlayerView ..> Message
+PlayerView ..> PlayController
+note on link
+    interact()
+end note
+
+PlayView ..> ResultView
+note on link
+    interact(playController)
+end note
+BoardView ..> Message
+note on link
+    write()
+    writeln()
+end note
+BoardView ..> Coordinate
+MessageView ..> Color
+PlayView --> PlayController
+note on link
+    next()
+    isGameOver()
+end note
+
+PlayController ..> Session
+note on link
+    next()
+    putToken(column)
+    getPutTokenError(column)
+    getResult()
+    getActivePlayerColor()
+    isGameOver()
+end note
+Session ..> Game
+note on link
+    next()
+    putToken(column)
+    getPutTokenError(column)
+    getResult()
+    getActivePlayerColor()
+    isGameOver()
+end note
+Session ..> Registry
+note on link
+    register()
+end note
+Registry ..> Memento
+note on link
+    add()
+end note
+Memento ..> Game
+note on link
+    getBoard()
+    getActivePlayer()
+end note
+Game ..> Turn
+note on link
+    next()
+    getActivePlayerColor()
+    getActivePlayer()
+end note
+Game ..> Board
+note on link
+    putToken(column)
+    getPutTokenError(column)
+    getColor()
+    isEmpty()
+    getBoard()
+end note
+Game ..> Result
+note on link
+    getResult()
+    isGameOver()
+end note
+Turn ..> Player
+note on link
+    getActivePlayer()
+end note
+
+ResultView ..> MessageView
+ResultView ..> ErrorView
+note on link
+    writeln(message)
+    writeWinner(color)
+end note
+BoardView ..> Coordinate
+ResultView ..> Coordinate
+PlayerView ..> Error
+Player ..> Coordinate
+Player ..> Error
+Player --> Board
+Player --> Color
+Game ..> Coordinate
+@enduml

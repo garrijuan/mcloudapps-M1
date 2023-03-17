@@ -1,0 +1,60 @@
+@startuml Versions
+
+title Secuencia versiones Connect4
+
+state Connect4 {
+
+state domainModel {
+  [*] --> dm.basic
+    state dm.basic #AF9EAF: Clases del modelo del dominio\nacopladas con interfaz de consola 
+  dm.basic --> [*]
+}
+ 
+
+state documentView {
+    [*] --> dv.basic 
+      state dv.basic #AF9EAF: Clases Vistas de Texto separadas\nde los Modelos del Dominio \nPara desacoplar los modelos\nde la consola.
+    
+      dv.basic --> withFactoryMethod
+      state withFactoryMethod #AF9EAF: Clase abstracta View para Open/Close de sus\ntecnologías.
+      
+    withFactoryMethod-->[*]
+    
+}
+
+domainModel --> documentView:Mantenimiento correctivo
+documentView --> modelViewPresenter
+
+state modelViewPresenter {
+    [*] --> presentationModel
+    [*] --> passiveView
+    presentationModel-->[*]
+    passiveView -->[*]
+    
+    state presentationModel {
+    [*] --> pm.basic
+
+    state pm.basic #AF9EAF:Clases Controladoras entre Vistas y Modelos por\ncada Caso de Uso pero con la clase Principal y las\nVistas acopladas a cada controlador.
+
+    state withFacade #AF9EAF:Clase Logic que encapsula Controladores y Modelos\n frente a la clase Principal.
+
+    state withDoubleDispatching #AF9EAF:Clase Visitador de Controladores para Técnica\nde Doble Despacho para descoplar clase principal \nde las vistas y de los tipos de controladores.
+
+    state withComposite #AF9EAF:Clase Session para aislar la clase principal del Game \n de los controladores de para Open/Close\ncon nuevos Casos de Uso.
+
+    pm.basic --> withFacade
+    withFacade --> withDoubleDispatching
+    withDoubleDispatching --> withComposite
+    withComposite --> [*]
+}
+
+}
+modelViewPresenter --> [*]
+
+}
+legend
+|=  Colores de los requisitos |
+|<#AF9EAF> Basica |
+endlegend
+
+@enduml

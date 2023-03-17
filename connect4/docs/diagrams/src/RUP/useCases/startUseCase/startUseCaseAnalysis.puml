@@ -1,0 +1,105 @@
+@startuml start
+allow_mixing
+
+actor Player
+
+package controllers  {
+
+    object StartController{
+
+    }
+}
+
+
+package models  {
+
+    object  Board{
+
+    }
+
+    object Game{
+
+    }
+    
+    object Session{
+    }
+
+}
+
+package types  {
+
+    object Color{
+
+    }
+}
+
+package utils  {
+
+
+    object Coordinate{
+
+    }
+
+}
+
+
+package views {
+    object BoardView{
+
+    }
+
+    object StartView{
+
+    }
+
+    object MessageView{
+
+    }
+    object Message{
+
+    }
+}
+
+Player --> StartView
+note on link
+    start()
+end note
+StartView ..> MessageView
+note on link
+    writeln()
+end note
+StartView ..> BoardView
+note on link
+    interact(startController)
+end note
+BoardView ..> MessageView
+note on link
+    write()
+    writeColor(color)
+end note
+BoardView ..> Message
+StartView ..> Message
+
+BoardView ..> Coordinate
+BoardView ..> StartController
+note on link
+    getColor(coordinate)
+end note
+StartController --> Session
+note on link
+    getColor(coordinate)
+end note
+Session --> Game
+note on link
+    getColor(coordinate)
+end note
+StartController ..> Coordinate
+Game *-down-> Board
+note on link
+    getColor(coordinate)
+end note
+Game ..> Coordinate
+Board ..> Coordinate
+Session ..> Coordinate
+Board *-> Color
+@enduml

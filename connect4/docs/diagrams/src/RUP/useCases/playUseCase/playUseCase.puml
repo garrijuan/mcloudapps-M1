@@ -1,0 +1,36 @@
+@startuml StateDiagramPlayState
+state A as "IN_GAME"
+state B as " "
+state D as " "
+state E as " "
+state F as " "
+state G as " "
+state H as " "
+state I as " "
+state if <<choice>>
+state if2 <<choice>>
+state if3 <<choice>>
+state if4 <<choice>>
+
+[*] --> A
+A --> if: Current turn player requests Play
+if --> B: [pieces on board 0..41]
+B --> C: System requests to introduce a column
+C --> if2: Current turn player introduces a column
+if2 --> D: [error]
+note on link
+    Column is not valid
+    Column is full
+end note
+if2 --> E
+D --> [*]: System shows error
+E --> if3: System shows updated board
+if3 --> F: [gameOver]
+if3 --> G 
+F --> if4
+if4 --> H: System shows winner message
+if4 --> I: System shows tie message
+I --> [*]: System allows Resume 
+H --> [*]: System allows Resume
+G --> [*]: System allows Play\nSystem allows Redo\nSystem allows Undo
+@enduml

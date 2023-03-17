@@ -1,0 +1,130 @@
+@startuml PackagesDiagramAnalysis
+title Análisis de paquetes Connect4
+
+package connectFour #D0D0D0 {
+  package controllers #D0D0D0 {
+    interface AcceptorController
+    interface ControllersVisitor
+    abstract Controller
+  }
+  package types #D0D0D0 {
+    enum Error
+    enum Color
+  }
+  package views #D0D0D0 {
+    enum Message
+    interface View
+    package console #D0D0D0 {
+      abstract Command
+    }
+  }
+  package models #D0D0D0 {
+    enum StateValue
+  }
+}
+package utils #D0D0D0 {
+  package utils.models #D0D0D0 {
+    class ClosedInterval
+    abstract Command
+    enum Direction
+    class Coordinate
+  }
+  package utils.views #D0D0D0 {
+    class BoundedIntDialog
+    class Console
+    abstract Menu
+    class YesNoDialog
+  }
+}
+
+views .down.> types
+views .down.> utils
+models .down.> types
+models .down.> utils
+controllers .down.> views
+controllers .down.> models
+controllers .down.> types
+
+utils.views -down-> utils.models
+
+connectFour.controllers.ActionController -down-|> Controller
+connectFour.controllers.StartController -down-|> Controller
+connectFour.controllers.PlayController -down-|> Controller
+connectFour.controllers.ResumeController -down-|> Controller
+connectFour.controllers.UndoController -down-|> Controller
+connectFour.controllers.RedoController -down-|> Controller
+connectFour.controllers.StartController .down.|> ControllersVisitor
+connectFour.controllers.PlayController .down.|> ControllersVisitor
+connectFour.controllers.ResumeController .down.|> ControllersVisitor
+connectFour.controllers.PlayController .down.> connectFour.controllers.ActionController
+connectFour.controllers.PlayController .down.> connectFour.controllers.UndoController
+connectFour.controllers.PlayController .down.> connectFour.controllers.RedoController
+ControllersVisitor -down-|> AcceptorController 
+
+connectFour.controllers.Logic .down.> connectFour.controllers.StartController
+connectFour.controllers.Logic .down.> connectFour.controllers.PlayController
+connectFour.controllers.Logic .down.> connectFour.controllers.ResumeController
+connectFour.controllers.Logic -down-> AcceptorController
+
+connectFour.models.Game *-down-> connectFour.models.Board 
+connectFour.models.Game *-down-> connectFour.models.Turn 
+connectFour.models.Game *-down-> connectFour.models.Result 
+connectFour.models.Game -down-> connectFour.models.Memento
+
+connectFour.models.Memento .down.> connectFour.models.Board 
+connectFour.models.Player .down.> connectFour.models.Board 
+
+connectFour.models.Registry -down-> connectFour.models.Game
+connectFour.models.Registry *-down-> connectFour.models.Memento 
+
+connectFour.models.Result -down-> connectFour.models.Board 
+
+connectFour.models.Session *-down-> connectFour.models.State
+connectFour.models.Session *-down-> connectFour.models.Game
+connectFour.models.Session *-down-> connectFour.models.Registry
+
+connectFour.models.State -down-> StateValue
+
+connectFour.models.Turn *-down-> connectFour.models.Player
+connectFour.models.Turn -down-> connectFour.models.Board
+
+connectFour.views.console.UndoCommand -down-|> Command 
+connectFour.views.console.UndoCommand .down.> Message 
+
+connectFour.views.console.RedoCommand -down-|> Command 
+connectFour.views.console.RedoCommand .down.> Message 
+
+connectFour.views.console.ActionCommand -down-|> Command 
+connectFour.views.console.ActionCommand .down.> Message 
+
+Command .down.> connectFour.views.console.BoardView
+
+connectFour.views.console.StartView *-down-> connectFour.views.console.MessageView
+connectFour.views.console.StartView *-down-> connectFour.views.console.BoardView
+connectFour.views.console.StartView .down.> Message
+
+connectFour.views.console.ResumeView .down.> Message
+
+connectFour.views.console.ResultView *-down-> connectFour.views.console.MessageView
+connectFour.views.console.ResultView .down.> Message
+
+connectFour.views.console.PlayView *-down-> connectFour.views.console.ResultView
+
+connectFour.views.console.PlayerView .down.> Message
+connectFour.views.console.PlayerView -down-> connectFour.views.ErrorView
+
+connectFour.views.console.MessageView .down.> Message
+
+connectFour.views.console.ConsoleView .down.|> View
+connectFour.views.console.ConsoleView *-down-> connectFour.views.console.StartView
+connectFour.views.console.ConsoleView *-down-> connectFour.views.console.PlayView
+connectFour.views.console.ConsoleView *-down-> connectFour.views.console.ResumeView
+
+connectFour.views.console.BoardView -down-> connectFour.views.console.MessageView
+connectFour.views.console.BoardView .down.> Message
+
+
+
+
+
+@enduml
